@@ -1,0 +1,45 @@
+.product-box{
+    text-align: center;
+    padding: 15px;
+}
+
+.product-box .category{
+    color: navy;
+    font-size: 20px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    text-decoration: underline;
+}
+
+.product-box .item-box img{
+    max-width: 200px;
+}
+
+.parent-item-box{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.item-box{
+    width: calc(33.33% - 12px);
+    border: 1px solid gray;
+    background-color: rgb(255, 197, 177);
+    border-radius: 20px;
+}
+
+.old-price{
+    color: gray;
+    text-decoration: line-through;
+    padding-right: 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.new-price{
+    color: black;
+    font-weight: bold;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.App{
+    background-color: bisque;
+}

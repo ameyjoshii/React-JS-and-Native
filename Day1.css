@@ -1,0 +1,35 @@
+form{
+    padding: 20px;
+    margin-left: 40%;
+    width: fit-content;
+    background-size: contain;
+    background-image: linear-gradient(to top, rgb(167, 188, 245), rgb(253, 253, 253))
+
+}
+h2{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    align-self: left;
+    padding-left: 10px;
+    color: navy;
+}
+h3{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    align-self: left;
+    padding-left: 10px;
+    color: navy;
+}
+label{
+    align-self: left;
+    color: navy;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: small;
+}
+button{
+    width: fit-content;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: white;
+    background-color: green;
+}
+div{
+    padding: 5px; 
+}
