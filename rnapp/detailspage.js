@@ -6,8 +6,8 @@ export default function DetailsPage(props) {
     
     return (
     <View style={pageStyle.viewStyle}>
-        <Pressable onPress={props.navigation.goBack}>
-            <Text style={pageStyle.backStyle}>Go Back</Text>
+        <Pressable onPress={props.navigation.goBack} style={pageStyle.backStyle}>
+            <Text style={pageStyle.backStyleTxt}>Go Back</Text>
         </Pressable>
         <View style={pageStyle.containerStyle}>
             <Image
@@ -17,12 +17,12 @@ export default function DetailsPage(props) {
             <Text style={pageStyle.nameStyle}>{productData.name}</Text>
             <Text style={pageStyle.priceStyle}>Rs.{productData.price}/-</Text>
         </View>
-        <Pressable onPress={()=> props.navigation.navigate("RNLogin")}>
-            <Text style={pageStyle.helpStyle}>Need Help? Contact Us!!</Text>
+        <Pressable style={pageStyle.helpStyle} onPress={()=> props.navigation.navigate("RNLogin")}>
+            <Text style={pageStyle.helpTxtStyle}>Need Help? Contact Us!!</Text>
         </Pressable>
-     {/*   <Pressable onPress={props.navigation.navigate("RNLogin")}>
-            <Text style={pageStyle.locateStyle}>Locate Us!!</Text>
-    </Pressable> */}
+        <Pressable style={pageStyle.helpStyle} onPress={props.navigation.navigate("StoreLocation")}>
+            <Text style={pageStyle.locateTxtStyle}>Locate Us!!</Text>
+        </Pressable>
     </View>
   )
 }
@@ -31,7 +31,7 @@ const pageStyle = StyleSheet.create({
     
     viewStyle:{
         flex:1,
-        backgroundColor:'#cff',
+        backgroundColor:'#C5CAE9',
         padding:20,
     },
 
@@ -49,7 +49,7 @@ const pageStyle = StyleSheet.create({
         padding:10,
         borderWidth:1,
         borderStyle:'solid',
-        backgroundColor:'#fee',
+        backgroundColor:'#FFF9C4',
     },
 
     imageStyle:{
@@ -58,16 +58,24 @@ const pageStyle = StyleSheet.create({
         width:300,
         marginTop:20,
         alignSelf:'center',
+        borderStyle:'solid',
+        borderWidth:1,
+        borderColor:'#000',
+        borderRadius:20,
+    },
+
+    backStyleTxt:{
+        fontSize:14,
+        textAlign:'center',
+        backgroundColor:'#ff9',
+        fontWeight:'bold',
+        color:'#000',
     },
 
     backStyle:{
-        fontSize:14,
         width:60,
-        textAlign:'center',
-        backgroundColor:'#ff9',
         borderWidth:1,
         borderStyle:'solid',
-        fontWeight:'bold',
         color:'#000',
     },
 
@@ -79,20 +87,30 @@ const pageStyle = StyleSheet.create({
     },
 
     helpStyle:{
-        textAlign:'center',
-        fontSize:12,
+        width:150,
         marginTop:10,
+        alignSelf:'center'
+    },
+    
+    helpTxtStyle:{
+        textAlign:'center',
+        fontSize:13,
         textDecorationLine:'underline',
         fontWeight:'bold',
         color:'#444',
     },
-
-   /* locateStyle:{
-        textAlign:'center',
-        fontSize:12,
+    
+    locateStyle:{
+        width:150,
         marginTop:10,
+        alignSelf:'center',
+    },
+
+    locateTxtStyle:{
+        textAlign:'center',
+        fontSize:13,
         textDecorationLine:'underline',
         fontWeight:'bold',
         color:'#444',
-    },*/
+    },
 })

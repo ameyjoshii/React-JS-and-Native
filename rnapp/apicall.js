@@ -1,58 +1,28 @@
-import { View, Text, ScrollView, Button, Image, StyleSheet, Touchable, Pressable, TextInput } from 'react-native'
+import { View, Text, ScrollView, Button, Image, StyleSheet, Pressable} from 'react-native'
 import React, {useState, useEffect} from 'react'
 import axios from 'axios';
+import SearchIcon from './srcs/search.png'
 
 export default function ApiCall(props) {
     
     const [apiData, setApiData] = useState([]);
     const apiUrl = "https://api.dotshowroom.in/api/dotk/catalog/getItemsBasicDetailsByStoreId/2490120?category_type=0"
-    var searchUrl="https://api.dotshowroom.in/api/dotk/catalog/searchItems"
-    const [searchData, setSearchApiData] = useState([]);
+
     useEffect(() => {
         axios.get(apiUrl).then(data => {
-            console.log(data,"sas");
+          //  console.log(data,"sas");
             setApiData(data.data);
     });
     }, []);
     
-    const handleChange = (value) => {
-        axios.post(searchUrl, {
-            page: 1,
-            search_text: value,
-            store_id: 2490120,
-        }).then((data)=> {
-            console.log(data,"asasd");
-            setSearchApiData(data.data); 
-        })
-    };
-    useEffect(() => {
-        axios.get(searchUrl).then(data => {
-            console.log(data,"asas");
-            setSearchApiData(data.data);
-        });
-    }, []);
-
     return (
         <View style={style.container}>
-            <Text style={style.pageHeading}>Fruit-Kart</Text>
-            <View style={style.searchbar}>
-                <TextInput style={style.searchInput}
-                    placeholder="Search Here!!"
-                    onChangeText={(value) => handleChange(value)}
-                />
-                <Pressable style={style}>
-                    <Text style={style.clearAll}>Clear All</Text>
+            <View style={style.searchiconview}>
+                <Text style={style.pageHeading}>Fruit-Kart</Text>
+                <Pressable onPress={() => props.navigation.navigate("Search")}>
+                    <Image style={style.searchicon} source={SearchIcon}/>
                 </Pressable>
             </View>
-            <ScrollView>
-                {searchData?.data?.map(product => {
-                    return(
-                        <View>
-                            <Text>{product?.name}</Text>
-                        </View>
-                    );
-                })}
-            </ScrollView>
             <ScrollView>
                 {apiData?.store_items?.map(item => {
                     return(
@@ -67,13 +37,11 @@ export default function ApiCall(props) {
                                             <Text style={style.oprice}>Rs.{productItem?.price}/-</Text>
                                             <Text style={style.dprice}>Rs.{productItem?.discounted_price}/-</Text>
                                             <View style={style.btnStyle}>
-                                                <Button 
-                                                    title='Add to Cart'  
-                                                    onPress={() => props.navigation.navigate('DetailsPage',{
-                                                        data: productItem,
-                                                    })
-                                                }
-                                                    />
+                                                <Pressable style={style.addCart} onPress={() => props.navigation.navigate('DetailsPage',{data: productItem})}>
+                                                    <Text style={style.addCartTxt}>
+                                                        Add to Cart
+                                                    </Text>
+                                                </Pressable>
                                             </View>
                                         </View>
                                         
@@ -89,57 +57,64 @@ export default function ApiCall(props) {
     );
 }
 
-const style = StyleSheet.create({
+const style = StyleSheet.create({  
     container:{
-        padding:20,
-        backgroundColor:'#cff',
+        flex:1,
+        paddingHorizontal:15,
+        backgroundColor:'#C5CAE9',
     },
 
-    searchbar:{
+    searchicon:{
+        width:30,
+        height:30,
+        marginTop:7,
+        marginHorizontal:5,
+    },
+
+    searchiconview:{
         flexDirection:'row',
-        paddingLeft:20,
-        marginBottom:10,
-        marginTop:10,
-        borderRadius:20,
-        backgroundColor:'#fee',
-        borderStyle:"solid",
-        borderColor:'#000',
-        borderWidth:1,
-    },
-
-    clearAll:{
-        color:'#000',
-        marginLeft:160,
-        marginTop:12,
+        justifyContent:'space-between',
+        borderBottomColor:'#555',
+        borderBottomWidth:2,
     },
 
     pageHeading:{
         fontSize:20,
         textAlign:"center",
         margin:5,
+        paddingVertical:5,
+        marginHorizontal:10,
+        paddingHorizontal:100,
         fontWeight:"bold",
         color:'#ffff',
-        backgroundColor:'#07b',
+        backgroundColor:'#303F9F',
         borderStyle:"solid",
         borderColor:'#000',
         borderWidth:2,
+        borderRadius:10,
     },
+
     categoryStyle:{
         textAlign:'center', 
         fontWeight:'bold', 
         color:'#000', 
-        backgroundColor:'#ff9',
+        backgroundColor:'#FFEB3B',
         borderStyle:"solid",
         borderColor:'#000',
         borderWidth:1,
-        padding:5, 
+        padding:5,
+        marginTop:2,
+        marginHorizontal:10, 
         fontSize:17,
+        borderRadius:10,
     },
+
     productItemContainer:{
         flexDirection:'row',
-        flexWrap: "wrap",
-        padding:5,
+        flexWrap:'wrap',
+        marginHorizontal:5,
     },
+
     productItemStyle:{
         width:"47%",
         margin:5,
@@ -148,30 +123,53 @@ const style = StyleSheet.create({
         marginHorizontal:5,
         marginVertical:5,
         padding:10,
-        backgroundColor:'#fee',
+        backgroundColor:'#FFF9C4',
     },
+
     imageprop:{
+        borderRadius:100,
         height:150, 
         width:"100%",
+        borderStyle:'solid',
+        borderWidth:1,
+        borderColor:'#000',
     },
+
     nameStyle:{
         fontSize:15,
         color:'#000',
         fontWeight:'bold',
         marginTop:5,
     },
+
     oprice:{
         color:'#000',
         textDecorationLine:'line-through',
         fontSize:13,
     },
+
     dprice:{
         color:'#f00',
         fontWeight:'bold',
         fontSize:15,
     },
-    btnStyle:{
-        padding:10,
+
+    addCart:{
+        borderRadius:20,
+        borderWidth:1,
+        borderStyle:'solid',
+        marginTop:10,
+        width:100,
+        alignSelf:'center',
+        padding:5,
+        backgroundColor:'#3F51B5',
+    },
+
+    addCartTxt:{
+        fontSize:15,
+        textAlign:'center',
+        fontWeight:'bold',
+        color:'#FFFFFF',
     },
 })
     
