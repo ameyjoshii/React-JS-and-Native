@@ -20,9 +20,6 @@ export default function DetailsPage(props) {
         <Pressable style={pageStyle.helpStyle} onPress={()=> props.navigation.navigate("RNLogin")}>
             <Text style={pageStyle.helpTxtStyle}>Need Help? Contact Us!!</Text>
         </Pressable>
-        <Pressable style={pageStyle.helpStyle} onPress={props.navigation.navigate("StoreLocation")}>
-            <Text style={pageStyle.locateTxtStyle}>Locate Us!!</Text>
-        </Pressable>
     </View>
   )
 }
@@ -93,20 +90,6 @@ const pageStyle = StyleSheet.create({
     },
     
     helpTxtStyle:{
-        textAlign:'center',
-        fontSize:13,
-        textDecorationLine:'underline',
-        fontWeight:'bold',
-        color:'#444',
-    },
-    
-    locateStyle:{
-        width:150,
-        marginTop:10,
-        alignSelf:'center',
-    },
-
-    locateTxtStyle:{
         textAlign:'center',
         fontSize:13,
         textDecorationLine:'underline',

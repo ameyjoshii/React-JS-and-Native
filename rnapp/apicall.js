@@ -1,27 +1,77 @@
-import { View, Text, ScrollView, Button, Image, StyleSheet, Pressable} from 'react-native'
+import { ActivityIndicator, View, Text, ScrollView, Button, Image, StyleSheet, TouchableOpacity} from 'react-native'
 import React, {useState, useEffect} from 'react'
 import axios from 'axios';
 import SearchIcon from './srcs/search.png'
 
 export default function ApiCall(props) {
-    
+    const [cartData, setcartData] = useState({});
     const [apiData, setApiData] = useState([]);
+    const [totalQty, settotalQty] = useState(0);
+    const [isLoading, setisLoading] = useState(false);
     const apiUrl = "https://api.dotshowroom.in/api/dotk/catalog/getItemsBasicDetailsByStoreId/2490120?category_type=0"
 
     useEffect(() => {
         axios.get(apiUrl).then(data => {
-          //  console.log(data,"sas");
             setApiData(data.data);
     });
     }, []);
+
+    useEffect(() => {
+      var totalQty=0;
+      cartData && 
+      Object.keys(cartData)?.length && 
+      Object.keys(cartData).map(key => {
+        totalQty = totalQty + cartData[key]?.quantity
+      });
+      settotalQty(totalQty)
+    }, [cartData])
     
+
+    const handleCart = productItem => {
+        let cartPayload = {...cartData};
+        cartPayload[productItem?.id] = {
+            ...productItem,
+            quantity: 1,
+        };
+        setcartData(cartPayload);
+    };
+    
+    const decrementCount = (id) => {
+        let cartPayload = {...cartData};
+        cartPayload[id].quantity = cartPayload[id].quantity - 1;
+        setcartData(cartPayload);
+    };
+
+    const incrementCount = (id) => {
+        let cartPayload = {...cartData};
+        cartPayload[id].quantity = cartPayload[id].quantity + 1;
+        setcartData(cartPayload);
+    };
+
+    const renderCartButton = (productItem) => {
+        return cartData[productItem?.id]?.quantity ? 
+            (<View style={style.counter}>
+                <TouchableOpacity onPress={() => decrementCount(productItem?.id)}>
+                    <Text style={style.decrement}>-</Text>
+                </TouchableOpacity>
+                <Text style={style.itemCount}>{cartData[productItem?.id]?.quantity}</Text>
+                <TouchableOpacity onPress={() => incrementCount(productItem?.id)}>
+                    <Text style={style.increment}>+</Text>
+                </TouchableOpacity>
+            </View> ): (<TouchableOpacity style={style.addCart} onPress={() => handleCart(productItem)}>
+                <Text style={style.addCartTxt}>
+                    Add to Cart
+                </Text>
+            </TouchableOpacity>)
+    }
+
     return (
         <View style={style.container}>
             <View style={style.searchiconview}>
                 <Text style={style.pageHeading}>Fruit-Kart</Text>
-                <Pressable onPress={() => props.navigation.navigate("Search")}>
+                <TouchableOpacity onPress={() => props.navigation.navigate("Search")}>
                     <Image style={style.searchicon} source={SearchIcon}/>
-                </Pressable>
+                </TouchableOpacity>
             </View>
             <ScrollView>
                 {apiData?.store_items?.map(item => {
@@ -31,20 +81,17 @@ export default function ApiCall(props) {
                             <View style={style.productItemContainer}>
                                 {
                                     item?.items?.map((productItem) => {
-                                        return <View style={style.productItemStyle}>
+                                        return(
+                                        <View style={style.productItemStyle}>
+                                            <TouchableOpacity onPress={() => props.navigation.navigate('DetailsPage',{data: productItem})}>
                                             <Image style={style.imageprop} source={{uri: productItem?.image_url}}/>
                                             <Text numberOfLines={1} style={style.nameStyle}>{productItem?.name}</Text>
                                             <Text style={style.oprice}>Rs.{productItem?.price}/-</Text>
                                             <Text style={style.dprice}>Rs.{productItem?.discounted_price}/-</Text>
-                                            <View style={style.btnStyle}>
-                                                <Pressable style={style.addCart} onPress={() => props.navigation.navigate('DetailsPage',{data: productItem})}>
-                                                    <Text style={style.addCartTxt}>
-                                                        Add to Cart
-                                                    </Text>
-                                                </Pressable>
-                                            </View>
+                                            </TouchableOpacity>
+                                            {renderCartButton(productItem)}
                                         </View>
-                                        
+                                        )  
                                     })
                                 }
                             </View>
@@ -53,6 +100,12 @@ export default function ApiCall(props) {
                     );                
                 })}
             </ScrollView>
+            {cartData && Object.keys(cartData).length ? ( 
+            <TouchableOpacity style={style.cartBar}>
+                <Text style={style.cartBarTxt}>View Cart:</Text>
+                <Text style={style.cartBarTxt}>{totalQty}</Text>
+            </TouchableOpacity> 
+            ) : null}
         </View>
     );
 }
@@ -62,6 +115,24 @@ const style = StyleSheet.create({
         flex:1,
         paddingHorizontal:15,
         backgroundColor:'#C5CAE9',
+    },
+
+    cartBar:{
+       flexDirection:'row',
+       flexWrap:'wrap',
+       justifyContent:'space-between',
+       paddingHorizontal:10,
+       paddingVertical:5,
+       backgroundColor:'#303F9F',
+       borderStyle:'solid',
+       borderColor:'#000',
+       borderWidth:2,
+       borderRadius:8,        
+    },
+
+    cartBarTxt:{
+       fontWeight:'bold',
+       color:'#fff'
     },
 
     searchicon:{
@@ -74,8 +145,6 @@ const style = StyleSheet.create({
     searchiconview:{
         flexDirection:'row',
         justifyContent:'space-between',
-        borderBottomColor:'#555',
-        borderBottomWidth:2,
     },
 
     pageHeading:{
@@ -170,6 +239,38 @@ const style = StyleSheet.create({
         textAlign:'center',
         fontWeight:'bold',
         color:'#FFFFFF',
+    },
+
+    decrement:{
+        backgroundColor:'#3F51B5',
+        borderBottomLeftRadius:10,
+        borderTopLeftRadius:10,
+        paddingHorizontal:15,
+        fontSize:18,
+        color:'#ffff',
+    },
+
+    increment:{
+        backgroundColor:'#3F51B5',
+        borderBottomRightRadius:10,
+        borderTopRightRadius:10,
+        paddingHorizontal:15,
+        justifyContent:'center',
+        fontSize:18,
+        color:'#ffff',
+    },
+
+    counter:{
+        marginTop:10,
+        flexDirection:'row',
+        flexWrap:'wrap',
+        justifyContent:'space-between',
+        marginHorizontal:15,
+    },
+
+    itemCount:{
+        fontSize:18,
+        color:'#000',
     },
 })
     

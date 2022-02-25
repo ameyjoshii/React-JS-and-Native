@@ -15,7 +15,7 @@ export default function App() {
 
   return (
    <NavigationContainer>
-     <Stack.Navigator initialRouteName='PaytmHome'
+     <Stack.Navigator initialRouteName='ApiCall'
      screenOptions={{
        headerShown: false,
      }}>
